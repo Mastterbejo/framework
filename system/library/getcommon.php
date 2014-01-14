@@ -45,14 +45,17 @@ class getcommon {
 	public static function sessionExpired()
 	{	
 		$rows = self::$model->query("SELECT * FROM session","array");
-		foreach($rows as $row)
+		if(!empty($rows))
 		{
-			$now = strtotime(date("Y-m-d H:i:s"));
-			$expired = strtotime($row->date."+1 minutes");
-			
-			if($now > $expired)
+			foreach($rows as $row)
 			{
-				self::$model->query("DELETE FROM session WHERE session_id='".$row->session_id."'");
+				$now = strtotime(date("Y-m-d H:i:s"));
+				$expired = strtotime($row->date."+1 minutes");
+				
+				if($now > $expired)
+				{
+					self::$model->query("DELETE FROM session WHERE session_id='".$row->session_id."'");
+				}
 			}
 		}
 		//echo strtotime(date("Y-m-d H:i:s"));
